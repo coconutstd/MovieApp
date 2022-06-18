@@ -1,15 +1,26 @@
 import React, {useState} from 'react';
+import * as Font from 'expo-font'
 import AppLoading from "expo-app-loading";
-import {Text} from "react-native";
+import {Text, Image} from "react-native";
+import {Ionicons} from "@expo/vector-icons"
+import { Asset, useAssets } from "expo-asset"
+import {useFonts} from "expo-font";
+
+const loadFonts = (fonts) => fonts.map(font => Font.loadAsync(font))
+
+const loadImages = (images) => images.map((image) => {
+  if (typeof image === 'string') {
+    return Image.prefetch(image)
+  } else {
+    return Asset.loadAsync(image)
+  }
+})
 
 export default function App() {
-  const [ready, setReady] = useState(false)
-  const onFinish = () => setReady(true)
-  const startLoading = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 10000))
-  }
-  if (!ready) {
-    return <AppLoading startAsync={startLoading} onFinish={onFinish} onError={console.error} />
+  const [assets] = useAssets([require("./my-face.jpeg")])
+  const [loaded] = useFonts(Ionicons.font)
+  if (!assets || !loaded) {
+    return <AppLoading />
   }
   return (
     <Text>We are done doing</Text>
