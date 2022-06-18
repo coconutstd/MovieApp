@@ -1,10 +1,18 @@
 import React from "react";
 import { View, Text } from "react-native";
 import {TouchableOpacity} from "react-native";
+import styled from 'styled-components/native'
+
+const Btn = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
 
 const Movies = ({ navigation: {navigate}}) => (
-  <TouchableOpacity onPress={() => navigate("Stack", { screen: "Three"})} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  <Btn onPress={() => navigate("Stack", { screen: "Three"})}>
     <Text>Movies</Text>
-  </TouchableOpacity>
+  </Btn>
 );
 export default Movies;
