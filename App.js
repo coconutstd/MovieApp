@@ -5,6 +5,8 @@ import {Text, Image} from "react-native";
 import {Ionicons} from "@expo/vector-icons"
 import { Asset, useAssets } from "expo-asset"
 import {useFonts} from "expo-font";
+import {NavigationContainer} from "@react-navigation/native";
+import Tabs from "./navigation/Tabs";
 
 const loadFonts = (fonts) => fonts.map(font => Font.loadAsync(font))
 
@@ -23,6 +25,8 @@ export default function App() {
     return <AppLoading />
   }
   return (
-    <Text>We are done doing</Text>
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
   );
 }
