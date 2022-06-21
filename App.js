@@ -8,6 +8,7 @@ import Root from "./navigation/Root";
 import { Image, useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styled";
+import './i18n'
 
 export default function App() {
   const [assets] = useAssets([require("./my-face.jpeg")])

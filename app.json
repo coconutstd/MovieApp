@@ -5,7 +5,13 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.coconutstd.MovieApp"
+    },
+    "ios": {
+      "bundleIdentifier": "com.coconutstd.MovieApp"
+    }
   },
   "name": "MovieApp"
 }
