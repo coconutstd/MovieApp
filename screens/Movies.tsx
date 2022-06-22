@@ -2,10 +2,7 @@ import React, {useState, useEffect} from "react";
 import styled from 'styled-components/native'
 import Swiper from "react-native-swiper"
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity} from "react-native";
-import {makeImgPath} from "../utils";
-import { BlurView } from "expo-blur";
-import useColorScheme from "expo-status-bar/build/useColorScheme";
+import {ActivityIndicator, Dimensions} from "react-native";
 import Slide from "../components/Slide";
 
 const API_KEY = "2f7e1fdd60dee73dda1c0d7981150b8e"
@@ -23,16 +20,37 @@ const Loader = styled.View`
 const {height: SCREEN_HEIGHT} = Dimensions.get("window")
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
-
     const [loading, setLoading] = useState(true)
     const [nowPlaying, setNowPlaying] = useState([])
+    const [upcoming, setUpcoming] = useState([])
+    const [trending, setTrending] = useState([])
+    const getTrending = async () => {
+        const { results } = await (
+            await fetch(
+                `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
+            )
+        ).json()
+        setTrending(results)
+    }
+    const getUpcoming = async () => {
+        const { results } = await (
+            await fetch(
+                `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
+            )
+        ).json();
+        setUpcoming(results);
+    };
     const getNowPlaying = async () => {
         const { results } = await(await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`)).json()
         setNowPlaying(results )
         setLoading(false)
     }
+    const getData = async () => {
+        await Promise.all([getTrending(), getUpcoming(), getNowPlaying()])
+        setLoading(false)
+    }
     useEffect(() => {
-        getNowPlaying()
+        getData()
     }, [])
     return loading ? (
         <Loader>
