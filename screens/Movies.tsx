@@ -4,6 +4,8 @@ import Swiper from "react-native-swiper"
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {ActivityIndicator, Dimensions} from "react-native";
 import Slide from "../components/Slide";
+import Poster from "../components/Poster";
+import VMedia from "../components/VMedia";
 
 const API_KEY = "2f7e1fdd60dee73dda1c0d7981150b8e"
 
@@ -19,11 +21,43 @@ const Loader = styled.View`
 
 const {height: SCREEN_HEIGHT} = Dimensions.get("window")
 
+const ListTitle = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 30px;
+`
+
+const TrendingScroll = styled.ScrollView`
+  margin-top: 20px;
+`
+
+const Movie = styled.View`
+  margin-right: 20px;
+  align-items: center;
+`
+
+const Title = styled.Text`
+  color: white;
+  font-weight: 600;
+  margin-top: 7px;
+  margin-bottom: 5px;
+`
+const Votes = styled.Text`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+`
+
+const ListContainer = styled.View`
+  margin-bottom: 40px;
+`
+
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const [loading, setLoading] = useState(true)
     const [nowPlaying, setNowPlaying] = useState([])
     const [upcoming, setUpcoming] = useState([])
     const [trending, setTrending] = useState([])
+
     const getTrending = async () => {
         const { results } = await (
             await fetch(
@@ -65,7 +99,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                 autoplayTimeout={3.5}
                 showsButtons={false}
                 showsPagination={false}
-                containerStyle={{width: "100%", height: SCREEN_HEIGHT / 4}}
+                style={{marginBottom: 500}}
+                containerStyle={{marginBottom:30, width: "100%", height: SCREEN_HEIGHT / 4}}
             >
                 {nowPlaying.map((movie) => (<Slide
                         key={movie.id}
@@ -77,6 +112,18 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     />
                 ))}
             </Swiper>
+            <ListContainer>
+                <ListTitle>Trending Movies</ListTitle>
+                <TrendingScroll contentContainerStyle={{ paddingLeft: 30 }} horizontal showsHorizontalScrollIndicator={false}>
+                    {trending.map(movie => <VMedia
+                        key={movie.id}
+                        posterPath={movie.poster_path}
+                        originalTitle={movie.original_title}
+                        voteAverage={movie.vote_average} />)}
+                </TrendingScroll>
+            </ListContainer>
+            <ListTitle>Coming Soon</ListTitle>
+
         </Container>
     );
 }

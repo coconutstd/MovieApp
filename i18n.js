@@ -4,12 +4,16 @@ import { initReactI18next} from "react-i18next";
 const resources = {
   en: {
     translation: {
-      "welcome": "Good morning"
+      welcome: {
+        sayHello: "Good Morning"
+      }
     }
   },
   ko: {
     translation: {
-      "welcome": "좋은 아침 입니다."
+      welcome: {
+        sayHello: "좋은 아침입니다"
+      }
     }
   }
 }
