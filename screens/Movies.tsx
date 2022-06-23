@@ -4,7 +4,7 @@ import Swiper from "react-native-swiper"
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {ActivityIndicator, Dimensions} from "react-native";
 import Slide from "../components/Slide";
-import Poster from "../components/Poster";
+import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
 
 const API_KEY = "2f7e1fdd60dee73dda1c0d7981150b8e"
@@ -32,24 +32,12 @@ const TrendingScroll = styled.ScrollView`
   margin-top: 20px;
 `
 
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
-`
-
-const Title = styled.Text`
-  color: white;
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-`
-const Votes = styled.Text`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
-`
-
 const ListContainer = styled.View`
   margin-bottom: 40px;
+`
+
+const ComingSoonTitle = styled(ListTitle)`
+  margin-bottom: 20px;
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
@@ -122,8 +110,16 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                         voteAverage={movie.vote_average} />)}
                 </TrendingScroll>
             </ListContainer>
-            <ListTitle>Coming Soon</ListTitle>
-
+            <ComingSoonTitle>Coming Soon</ComingSoonTitle>
+            {upcoming.map((movie) => (
+                <HMedia
+                    key={movie.id}
+                    posterPath={movie.poster_path}
+                    originalTitle={movie.original_title}
+                    overview={movie.overview}
+                    releaseDate={movie.release_date}
+                />
+            ))}
         </Container>
     );
 }
