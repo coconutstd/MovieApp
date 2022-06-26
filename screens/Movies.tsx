@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from 'styled-components/native'
 import Swiper from "react-native-swiper"
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
@@ -48,7 +48,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const [trending, setTrending] = useState([])
 
     const getTrending = async () => {
-        const { results } = await (
+        const {results} = await (
             await fetch(
                 `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
             )
@@ -56,7 +56,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         setTrending(results)
     }
     const getUpcoming = async () => {
-        const { results } = await (
+        const {results} = await (
             await fetch(
                 `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
             )
@@ -64,8 +64,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         setUpcoming(results);
     };
     const getNowPlaying = async () => {
-        const { results } = await(await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`)).json()
-        setNowPlaying(results )
+        const {results} = await (await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`)).json()
+        setNowPlaying(results)
         setLoading(false)
     }
     const getData = async () => {
@@ -87,7 +87,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     ) : (
         <Container
             refreshControl={
-                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                <RefreshControl onRefresh={onRefresh} refreshing={refreshing}/>
             }
         >
             <Swiper
@@ -98,7 +98,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                 showsButtons={false}
                 showsPagination={false}
                 style={{marginBottom: 500}}
-                containerStyle={{marginBottom:30, width: "100%", height: SCREEN_HEIGHT / 4}}
+                containerStyle={{marginBottom: 30, width: "100%", height: SCREEN_HEIGHT / 4}}
             >
                 {nowPlaying.map((movie) => (<Slide
                         key={movie.id}
@@ -117,16 +117,16 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     horizontal
                     keyExtractor={(item) => item.id + ""}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 30}}
-                    ItemSeparatorComponent={() => <View style={{ width: 30 }}/>}
-                    renderItem={({ item }) => (
+                    contentContainerStyle={{paddingHorizontal: 30}}
+                    ItemSeparatorComponent={() => <View style={{width: 30}}/>}
+                    renderItem={({item}) => (
                         <VMedia
                             key={item.id}
                             posterPath={item.poster_path}
                             originalTitle={item.original_title}
-                            voteAverage={item.vote_average} />
+                            voteAverage={item.vote_average}/>
                     )}
-                    />
+                />
             </ListContainer>
             <ComingSoonTitle>Coming Soon</ComingSoonTitle>
             {upcoming.map((movie) => (
