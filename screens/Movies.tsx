@@ -6,8 +6,8 @@ import {ActivityIndicator, Dimensions, FlatList, RefreshControl, View} from "rea
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
-
-const API_KEY = "2f7e1fdd60dee73dda1c0d7981150b8e"
+import { moviesApi } from "../api"
+import {useQuery, useQueryClient} from "react-query";
 
 const Container = styled.ScrollView`
   background-color: ${props => props.theme.mainBgColor};
@@ -42,44 +42,23 @@ const ComingSoonTitle = styled(ListTitle)`
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const [refreshing, setRefreshing] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [nowPlaying, setNowPlaying] = useState([])
-    const [upcoming, setUpcoming] = useState([])
-    const [trending, setTrending] = useState([])
+    const queryClien = useQueryClient()
 
-    const getTrending = async () => {
-        const {results} = await (
-            await fetch(
-                `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
-            )
-        ).json()
-        setTrending(results)
-    }
-    const getUpcoming = async () => {
-        const {results} = await (
-            await fetch(
-                `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
-            )
-        ).json();
-        setUpcoming(results);
-    };
-    const getNowPlaying = async () => {
-        const {results} = await (await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`)).json()
-        setNowPlaying(results)
-        setLoading(false)
-    }
-    const getData = async () => {
-        await Promise.all([getTrending(), getUpcoming(), getNowPlaying()])
-        setLoading(false)
-    }
-    useEffect(() => {
-        getData()
-    }, [])
-    const onRefresh = async () => {
-        setRefreshing(true)
-        await getData()
-        setRefreshing(false)
-    }
+    const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+        "nowPlaying",
+        moviesApi.nowPlaying
+    );
+    const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+        "upcoming",
+        moviesApi.upcoming
+    );
+    const { isLoading: trendingLoading, data: trendingData } = useQuery(
+        "trending",
+        moviesApi.trending
+    );
+
+    const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+    const onRefresh = async () => {}
     return loading ? (
         <Loader>
             <ActivityIndicator/>
@@ -100,7 +79,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                         style={{marginBottom: 500}}
                         containerStyle={{marginBottom: 30, width: "100%", height: SCREEN_HEIGHT / 4}}
                     >
-                        {nowPlaying.map((movie) => (<Slide
+                        {nowPlayingData.results.map((movie) => (<Slide
                                 key={movie.id}
                                 backdropPath={movie.backdrop_path}
                                 posterPath={movie.poster_path}
@@ -113,7 +92,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     <ListContainer>
                         <ListTitle>Trending Movies</ListTitle>
                         <TrendingScroll
-                            data={trending}
+                            data={trendingData.results}
                             horizontal
                             keyExtractor={(item) => item.id + ""}
                             showsHorizontalScrollIndicator={false}
@@ -129,7 +108,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                         />
                     </ListContainer>
                     <ComingSoonTitle>Coming Soon</ComingSoonTitle>
-                    {upcoming.map((movie) => (
+                    {upcomingData.results.map((movie) => (
                         <HMedia
                             key={movie.id}
                             posterPath={movie.poster_path}
@@ -140,7 +119,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     ))}
                 </>
             }
-            data={upcoming}
+            data={upcomingData.results}
             renderItem={({ item }) => (
             <HMedia
                 posterPath={item.poster_path}
