@@ -9,10 +9,6 @@ import VMedia from "../components/VMedia";
 import { moviesApi } from "../api"
 import {useQuery, useQueryClient} from "react-query";
 
-const Container = styled.ScrollView`
-  background-color: ${props => props.theme.mainBgColor};
-`
-
 const Loader = styled.View`
   flex: 1;
   justify-content: center;
@@ -41,29 +37,28 @@ const ComingSoonTitle = styled(ListTitle)`
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
-    const [refreshing, setRefreshing] = useState(false)
-    const queryClien = useQueryClient()
-
-    const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    const queryClient = useQueryClient()
+    const { isLoading: nowPlayingLoading, data: nowPlayingData, isRefetching: isRefetchingNowPlaying } = useQuery(
         "nowPlaying",
         moviesApi.nowPlaying
     );
-    const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    const { isLoading: upcomingLoading, data: upcomingData, isRefetching: isRefetchingUpcoming } = useQuery(
         "upcoming",
         moviesApi.upcoming
     );
-    const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    const { isLoading: trendingLoading, data: trendingData, isRefetching: isRefetchingTrending } = useQuery(
         "trending",
         moviesApi.trending
     );
 
     const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+    const refreshing = isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending
     const onRefresh = async () => {}
     return loading ? (
         <Loader>
             <ActivityIndicator/>
         </Loader>
-    ) : (
+    ) : upcomingData ? (
         <FlatList
             onRefresh={onRefresh}
             refreshing={refreshing}
@@ -129,7 +124,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             />
         )} keyExtractor={(item) => item.id + ""}
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />} />
-    );
+    ) : null;
 }
 
 export default Movies;
