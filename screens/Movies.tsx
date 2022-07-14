@@ -3,17 +3,12 @@ import styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ActivityIndicator, Dimensions, FlatList, View } from 'react-native';
+import Loader from "../components/Loader";
 import Slide from '../components/Slide';
 import HMedia from '../components/HMedia';
 import VMedia from '../components/VMedia';
 import { moviesApi } from '../api';
 import { useQuery, useQueryClient } from 'react-query';
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-content: center;
-`;
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -59,9 +54,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
 
   const onRefresh = async () => {};
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader/>
   ) : upcomingData ? (
     <FlatList
       onRefresh={onRefresh}
